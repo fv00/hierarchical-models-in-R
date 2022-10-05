@@ -1,0 +1,140 @@
+---
+title: "readme"
+author: "Santiago Franco Valencia"
+date: "14/9/2022"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Summary of GLM and LM
+
+Se resumen las funciones utilizadas en los capítulos 3, 4, 5 y 6 del texto guía de modelos jerarquícos:
+
+
+## Linear regression
+
+![linear regression](https://i.stack.imgur.com/83Jog.png)
+
+
+```{r}
+data(cars)
+cars.lm <- lm(dist ~ speed, data = cars)
+summary(cars.lm)
+new.dat <- data.frame(speed=30)
+#Confidence intervals and predictions
+predict(cars.lm, newdata = new.dat, interval = 'confidence', level = 0.95)
+##See predict.lm() for more documentation
+```
+
+## Logistic regression
+
+![Logit function](https://i.stack.imgur.com/WY61Z.png)
+
+### functions
+```{r}
+logit <- function(x){
+  return(log((x)/(1-x)))
+}
+inverse_logit <- function(x){
+  return(exp(x)/(1+exp(x)))
+}
+```
+
+### Fitting logistic regression models:
+
+```{r}
+formula = ""
+#logit_model <- glm(formula = formula, family=binomial(link='logit'))
+```
+
+### Interpretation of logistic regression coeficients:
+
+* Constant term can be interpreted as the estimated probability when other variables has the value of 0. (The "Weight" of the constant term).
+
+* The pendient terms can be interpreted as the estimated probability per unit by deriving the predictor inside the linf formula.
+
+
+### Graphic logistic regretion:
+
+```{r}
+#Graph logit func:
+## Plot x and y values
+#plot(x,y)
+## Plot curve of the model using the formula
+#curve()
+```
+
+
+## Generalized linear models
+
+Allos the answer Y to be normal, binomial, poisson, negative-binomial, gamma, and inverse gaussian.
+
+The variable Y is not modeled insted the mu parameter of the variable Y is modeled.
+
+```{r}
+#Adjust model
+#glm(formula, data=data, family=linkfunction())
+#Predict
+#link = predict(nb1, type = "link"),
+#fit = predict(nb1, type = "response"),
+```
+
+The link function allows to map the predictor variable values inside the correct parameter of the distribution assumed for Y.
+
+
+It is important to know that te parameter *family* of the glm package allows to assume certain distribution for the Y variable.
+
+## Notes about mixed models
+
+### Tipos de variables en modelos mixtos
+
+Respuesta Y
+
+Convariables x1,..., xk: Cuantitativas o cualitativas
+
+De agrupación g1,...,g2: Sólo cualitativas y cada gj debe ser una m.a de los niveles existentes. Ejemplo: Persona, barrio, ciudad departamento
+
+```{r}
+
+```
+### no pooling
+
+### Complete pooling
+
+### Multilevel modeling
+
+
+## Notación para efectos aleatorios:
+
+$b_0, b_1,...$
+$\alpha_0, \alpha_1...$
+$U_0, U_1,...$
+$b_{0i}: \text{Intercepto aleatorio para grupo i}$
+$\hat{b_{0i}}: \text{Intercepto aleatorio PREDICHO para grupo i}$
+
+
+## ¿Cómo se reporta un modelo ajustado en un artículo científico?
+
+### Modelo ajustado:
+
+General:
+
+$Y_{ij}\text{~}N(\hat{\mu_{ij}}, \hat{\sigma_{y}})$
+$\hat{\mu_{ij}} = 2.2378 - 6.0264x_{ij} + \hat{b_{0i}}$
+$\hat{\sigma_y} = 3.9352$
+$b_0\text{~}N(0, 25.3690)$
+
+Por grupo
+
+Grupo 3:
+
+$Y_{3j}\text{~}N(\hat{\mu_{3j}}, \hat{\sigma_{y}})$
+$\hat{\mu_{3j}} = 2.2378 + 19.88 - 6.0264x_{ij} $
+$\hat{\sigma_y} = 3.9352$
+$b_0\text{~}N(0, 25.3690)$
+
+¿Cuál es el valor esperado de Y cuando x=4?
+$E(Y|x=4)\hat{=}-2$
