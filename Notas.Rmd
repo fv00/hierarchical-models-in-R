@@ -138,3 +138,150 @@ $b_0\text{~}N(0, 25.3690)$
 
 ¿Cuál es el valor esperado de Y cuando x=4?
 $E(Y|x=4)\hat{=}-2$
+
+## Paquete lme4
+
+```{r}
+library(lme4)
+```
+
+### Función lmer
+
+La función lmer es la principal función del paquete lme4. Esta función sirve para ajustar un modelo mixto y su estructura es la siguiente:
+
+```r
+lmer(formula, data = NULL, REML = TRUE, control = lmerControl(),
+     start = NULL, verbose = 0L, subset, weights, na.action,
+     offset, contrasts = NULL, devFunOnly = FALSE, ...)
+```
+
+
+
+Datos incluído en el paquete lmer:
+
+```{r}
+head(sleepstudy)
+```
+```{r}
+library(ggplot2)
+
+ggplot(data = sleepstudy, aes(x = Days, y = Reaction, color = Subject)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~ Subject) + 
+  theme(legend.position = "none")
+```
+
+
+### Planteamiento de modelos con lmer
+
+```{r}
+fit <- lmer(Reaction ~ Days + (Days | Subject), REML = TRUE, data = sleepstudy)
+```
+
+```{r}
+summary(fit)
+```
+
+
+### Efectos fijos y aleatorios:
+
+Efectos fijos:
+```{r}
+
+```
+
+Efectos aleatorios
+```{r}
+
+```
+
+## Paquete nlme
+```{r}
+library(nlme)
+```
+### Ajuste con nlme
+
+```{r}
+fit_lme <- lme(fixed = Reaction ~ Days, random = ~ 1+ Days | Subject,  data = sleepstudy, method = "REML")
+```
+
+```{r}
+summary(fit_lme)
+```
+```{r}
+library(stargazer)
+```
+
+
+
+```{r, results='asis'}
+stargazer(fit_lme)
+```
+
+```{=latex}
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & Reaction \\ 
+\hline \\[-1.8ex] 
+ Days & 10.467$^{***}$ \\ 
+  & (1.546) \\ 
+  & \\ 
+ Constant & 251.405$^{***}$ \\ 
+  & (6.825) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 180 \\ 
+Log Likelihood & $-$871.814 \\ 
+Akaike Inf. Crit. & 1,755.628 \\ 
+Bayesian Inf. Crit. & 1,774.719 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+```
+
+
+## Actividad en clase
+
+```r
+ni <- 50
+G <- &&&
+nobs <- ni * &&&                      # Numero total de observaciones
+grupo <- factor(rep(x=1:G, each=&&&)) # Para crear la variable grupal
+obs <- rep(x=1:ni, times=G)           # Para identificar las obs por grupo
+x <- runif(n=nobs, min=&&&, max=&&&)  # La covariable
+b0 <- rnorm(n=G, mean=&&&, sd=&&&)    # El Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)              # El intercepto aleatorio pero repetido
+media <- &&& - 6 * x + &&&            # La media
+&&& <- rnorm(n=nobs, mean=media, sd=&&&) # La variable respuesta
+datos <- data.frame(grupo, obs, b0, x, &&&) # Organizando el dataframe
+```
+
+```{r}
+ni <- 50
+G <- 10
+nobs <- ni * G                      # Numero total de observaciones
+grupo <- factor(rep(x=1:G, each=ni)) # Para crear la variable grupal
+obs <- rep(x=1:ni, times=G)           # Para identificar las obs por grupo
+x <- runif(n=nobs, min=-5, max=6)  # La covariable
+b0 <- rnorm(n=G, mean=0, sd=1)    # El Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)              # El intercepto aleatorio pero repetido
+media <- 4 - 6 * x + b0            # La media
+y <- rnorm(n=nobs, mean=media, sd=4) # La variable respuesta
+datos <- data.frame(grupo, obs, b0, x, y) # Organizando el dataframe
+```
+
+```{r}
+library(ggplot2)
+ggplot(datos, aes(x, y, color=grupo) ) + 
+  geom_point() + 
+  labs(colour="Grupo/Cluster")
+```
