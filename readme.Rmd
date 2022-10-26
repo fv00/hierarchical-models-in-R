@@ -3,33 +3,43 @@ title: "readme"
 author: "Santiago Franco Valencia"
 date: "14/9/2022"
 output: github_document
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r}
+library(lme4)
+library(stargazer)
+library(merTools)
+library(nlme)
+library(RLRsim)
+library(emdbook) # Para usar la función dchibarsq
+library(ggplot2)
+```
+
 # Summary of GLM and LM
 
-Se resumen las funciones utilizadas en los capítulos 3, 4, 5 y 6 del texto guía de modelos jerarquícos:
-
+Se resumen las funciones utilizadas en los capítulos 3, 4, 5 y 6 del
+texto guía de modelos jerarquícos:
 
 ## Linear regression
 
 ![linear regression](https://i.stack.imgur.com/83Jog.png)
 
-
 ```{r}
 data(cars)
 cars.lm <- lm(dist ~ speed, data = cars)
 summary(cars.lm)
-
 new.dat <- data.frame(speed=30)
 #Confidence intervals and predictions
 predict(cars.lm, newdata = new.dat, interval = 'confidence', level = 0.95)
-
 ##See predict.lm() for more documentation
-
 ```
 
 ## Logistic regression
@@ -37,11 +47,11 @@ predict(cars.lm, newdata = new.dat, interval = 'confidence', level = 0.95)
 ![Logit function](https://i.stack.imgur.com/WY61Z.png)
 
 ### functions
+
 ```{r}
 logit <- function(x){
   return(log((x)/(1-x)))
 }
-
 inverse_logit <- function(x){
   return(exp(x)/(1+exp(x)))
 }
@@ -56,10 +66,12 @@ formula = ""
 
 ### Interpretation of logistic regression coeficients:
 
-* Constant term can be interpreted as the estimated probability when other variables has the value of 0. (The "Weight" of the constant term).
+-   Constant term can be interpreted as the estimated probability when
+    other variables has the value of 0. (The "Weight" of the constant
+    term).
 
-* The pendient terms can be interpreted as the estimated probability per unit by deriving the predictor inside the linf formula.
-
+-   The pendient terms can be interpreted as the estimated probability
+    per unit by deriving the predictor inside the linf formula.
 
 ### Graphic logistic regretion:
 
@@ -71,12 +83,13 @@ formula = ""
 #curve()
 ```
 
-
 ## Generalized linear models
 
-Allos the answer Y to be normal, binomial, poisson, negative-binomial, gamma, and inverse gaussian.
+Allos the answer Y to be normal, binomial, poisson, negative-binomial,
+gamma, and inverse gaussian.
 
-The variable Y is not modeled insted the mu parameter of the variable Y is modeled.
+The variable Y is not modeled insted the mu parameter of the variable Y
+is modeled.
 
 ```{r}
 #Adjust model
@@ -86,7 +99,375 @@ The variable Y is not modeled insted the mu parameter of the variable Y is model
 #fit = predict(nb1, type = "response"),
 ```
 
-The link function allows to map the predictor variable values inside the correct parameter of the distribution assumed for Y.
+The link function allows to map the predictor variable values inside the
+correct parameter of the distribution assumed for Y.
+
+It is important to know that te parameter *family* of the glm package
+allows to assume certain distribution for the Y variable.
+
+## Notes about mixed models
+
+### Tipos de variables en modelos mixtos
+
+Respuesta Y
+
+Convariables x1,..., xk: Cuantitativas o cualitativas
+
+De agrupación g1,...,g2: Sólo cualitativas y cada gj debe ser una m.a de
+los niveles existentes. Ejemplo: Persona, barrio, ciudad departamento
+
+```{r}
+
+```
+
+### no pooling
+
+### Complete pooling
+
+### Multilevel modeling
+
+## Notación para efectos aleatorios:
+
+$b_0, b_1,...$ $\alpha_0, \alpha_1...$ $U_0, U_1,...$
+$b_{0i}: \text{Intercepto aleatorio para grupo i}$
+$\hat{b_{0i}}: \text{Intercepto aleatorio PREDICHO para grupo i}$
+
+## ¿Cómo se reporta un modelo ajustado en un artículo científico?
+
+### Modelo ajustado:
+
+General:
+
+$Y_{ij}\text{~}N(\hat{\mu_{ij}}, \hat{\sigma_{y}})$
+$\hat{\mu_{ij}} = 2.2378 - 6.0264x_{ij} + \hat{b_{0i}}$
+$\hat{\sigma_y} = 3.9352$ $b_0\text{~}N(0, 25.3690)$
+
+Por grupo
+
+Grupo 3:
+
+$Y_{3j}\text{~}N(\hat{\mu_{3j}}, \hat{\sigma_{y}})$ \$\hat{\mu_{3j}} =
+2.2378 + 19.88 - 6.0264x\_{ij} \$ $\hat{\sigma_y} = 3.9352$
+$b_0\text{~}N(0, 25.3690)$
+
+¿Cuál es el valor esperado de Y cuando x=4? $E(Y|x=4)\hat{=}-2$
+
+## Paquete lme4
+
+### Función lmer
+
+La función lmer es la principal función del paquete lme4. Esta función
+sirve para ajustar un modelo mixto y su estructura es la siguiente:
+
+``` r
+lmer(formula, data = NULL, REML = TRUE, control = lmerControl(),
+     start = NULL, verbose = 0L, subset, weights, na.action,
+     offset, contrasts = NULL, devFunOnly = FALSE, ...)
+```
+
+Datos incluído en el paquete lmer:
+
+```{r}
+head(sleepstudy)
+```
+
+```{r}
+
+ggplot(data = sleepstudy, aes(x = Days, y = Reaction, color = Subject)) +
+  geom_point() +
+  theme_bw() +
+  facet_wrap(~ Subject) + 
+  theme(legend.position = "none")
+```
+
+### Planteamiento de modelos con lmer
+
+```{r}
+fit <- lmer(Reaction ~ Days + (Days | Subject), REML = TRUE, data = sleepstudy)
+```
+
+```{r}
+summary(fit)
+```
+
+### Efectos fijos y aleatorios:
+
+Efectos fijos:
+
+```{r}
+
+```
+
+Efectos aleatorios
+
+```{r}
+
+```
+
+## Paquete nlme
+
+### Ajuste con nlme
+
+```{r}
+fit_lme <- lme(fixed = Reaction ~ Days, random = ~ 1+ Days | Subject,  data = sleepstudy, method = "REML")
+```
+
+```{r}
+summary(fit_lme)
+```
+
+```{r, results='asis'}
+stargazer(fit_lme, type = 'latex')
+```
+
+## Actividad en clase
+
+``` r
+ni <- 50
+G <- &&&
+nobs <- ni * &&&                      # Numero total de observaciones
+grupo <- factor(rep(x=1:G, each=&&&)) # Para crear la variable grupal
+obs <- rep(x=1:ni, times=G)           # Para identificar las obs por grupo
+x <- runif(n=nobs, min=&&&, max=&&&)  # La covariable
+b0 <- rnorm(n=G, mean=&&&, sd=&&&)    # El Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)              # El intercepto aleatorio pero repetido
+media <- &&& - 6 * x + &&&            # La media
+&&& <- rnorm(n=nobs, mean=media, sd=&&&) # La variable respuesta
+datos <- data.frame(grupo, obs, b0, x, &&&) # Organizando el dataframe
+```
+
+```{r}
+ni <- 50
+G <- 10
+nobs <- ni * G                      # Numero total de observaciones
+grupo <- factor(rep(x=1:G, each=ni)) # Para crear la variable grupal
+obs <- rep(x=1:ni, times=G)           # Para identificar las obs por grupo
+x <- runif(n=nobs, min=-5, max=6)  # La covariable
+b0 <- rnorm(n=G, mean=0, sd=1)    # El Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)              # El intercepto aleatorio pero repetido
+media <- 4 - 6 * x + b0            # La media
+y <- rnorm(n=nobs, mean=media, sd=4) # La variable respuesta
+datos <- data.frame(grupo, obs, b0, x, y) # Organizando el dataframe
+```
+
+```{r}
+ggplot(datos, aes(x, y, color=grupo) ) + 
+  geom_point() + 
+  labs(colour="Grupo/Cluster")
+```
 
 
-It is important to know that te parameter *family* of the glm package allows to assume certain distribution for the Y variable.
+## Cómo distinguir las componentes aleatorias de un modelo desde su fórmula?
+
+### Pendiente aleatoria
+
+```r
+
+```
+
+### Intercepto aleatorio
+
+```{r}
+model1 <- lmer(mathach ~ 1 + (1|schid), REML=FALSE, data=hsb)
+summary(model1)
+```
+
+Según este resumen se tiene que:
+
+* $\hat{\sigma_y}^2 = 39.148$
+* $\hat{\sigma_{b_0}}^2 = 8.553$
+
+Para seleccionar este valor se tiene en cuenta que las estimaciones de las varianzas siempre tienen que ver con los efectos aleatorios, ya que la estructura del vector de parámetros es:
+
+$\theta=(\beta_0, \beta_1,\sigma_y^2, \sigma_{b_1}^2,\sigma_{b_0b_1}$
+
+* Los errores estándar no entran al vector de parámetros $\theta$.
+
+* Cuando la varianza de un efecto es "grande" respecto a la varianza asociada a la variable respuesta se tienen indicios de que la variable asociada al efecto tiene un peso considerable sobre la variable respuesta.
+
+**Intervalo de confianza**
+
+```{r}
+confint(model1)
+```
+```{r}
+model2 <- lmer(mathach ~ 1 + female + ses + (1|schid), REML=FALSE, data=hsb)
+summary(model2)
+```
+
+
+### Pendiente + intercepto aleatorio
+
+```{r}
+
+```
+
+## Comparación de modelos mediante anova
+
+
+***IMPORTANTE***: La prueba que se realiza es una razón de verosimilitud.
+
+```{r}
+anova(model1, model2)
+```
+
+$H_0$: El modelo 2 no representa una mejora en el ajuste respecto al modelo 1.
+$H_1$: El modelo 2 representa una mejora en el ajuste respecto al modelo 2.
+
+En otras palabras:
+
+$H_0$: $(\beta_{ses}\text{ }\beta_{female}) = (0, 0)$
+$H_0$: $(\beta_{ses}\text{ }\beta_{female}) \neq (0, 0)$
+
+Términos más sencillos:
+
+$H_0$: El SES y el sexo NO ayudan a explicar el puntaje en matemáticas de los estudiantes.
+$H_0$: El puntaje SES o el sexo ayudan a explicar el puntaje en matemáticas de los estudiantes.
+
+```{r}
+sigma2b0 = 8.553
+sigma2y = 39.148
+Icc = sigma2b0/(sigma2y+sigma2b0)
+Icc
+```
+```{r}
+ICC(outcome='mathach', group='schid', data =hsb)
+```
+
+## Pruebas de hipótesis sobre la varianza:
+
+### Componente de varianza fuera del borde
+
+### Componente de varianza en el borde:
+
+Se presenta cuando la hipótesis nula considera que uno o varios parámetros están justo en el borde del dominio del parámetro en cuestión. Por ejemplo, si queremos estudiar la inclusión del intercepto aleatorio $b_0$ en un modelo de regresión clásico, se plantearía:
+\[H_0: \sigma^2_{b0} = 0\]
+
+Se tienen 4 casos asociados a pruebas de razón de verosimilitud asociada a pruebas de hipótesis sobre la varianza:
+
+* Sin efecto aleatorio versus 1 efecto aleatorio: En este caso $H_0: \sigma^2_{b0} = 0$ vs $H_A: \sigma^2_{b} > 0$, la distribución asintótica del estadístico de razón de verosimilitud es una mezcla de $\chi^2_1$ y $\chi^2_0$.
+
+* 1 efecto aleatorio versus 2 efectos aleatorios: En este caso $H_0: \boldsymbol{D} = \begin{pmatrix} d_{11} & 0 \\ 0 & 0 \end{pmatrix}$ vs $H_A: \boldsymbol{D} \neq \boldsymbol{0}$ (Observar la notación vectorial).
+
+* q efectos aleatorios versus q+1 efectos aleatorios.
+* q efectos aleatorios versus q+k efectos aleatorios.
+
+### Ejemplo de pruebas de hipótesis sobre la varianza:
+
+Simule 10 observaciones para cada uno de los 10 grupos siguiendo el siguiente modelo y luego aplique la prueba de razón de verosimilitud para estudiar  $H_0: \sigma^2_{b0} = 0$ vs $H_A: \sigma^2_{b} > 0$:
+
+\[$\begin{align*}
+y_{ij} &\sim  N(\mu_{ij}, \sigma^2_y) \\
+\mu_{ij} &= 4 - 6 x_{ij} + b_{0i} \\
+\sigma^2_y &= 4 \\
+b_{0} &\sim N(0, \sigma^2_{b0}=4) \\
+x_{ij} &\sim U(0, 10)
+\end{align*}\]
+
+Se utilizarán el siguiente código para generar los datos:
+
+```{r}
+gen_dat_b0 <- function(n, m, beta0, beta1, sigmay, sigmab0, seed=NULL) {
+  if(is.null(seed)) seed <- as.integer(runif(1)*2e9)
+  group <- rep(1:n, each=m)
+  set.seed(seed)
+  b0 <- rep(rnorm(n=n, mean=0, sd=sigmab0), each=m)
+  set.seed(seed)
+  x <- runif(n=n*m, min=0, max=10)
+  set.seed(seed)
+  y <- rnorm(n=n*m, mean=beta0 + beta1 * x + b0, sd=sigmay)
+  data.frame(group=group, x=x, y=y)
+}
+```
+
+Vamos ahora a generar 10 observaciones para 10 grupos con intercepto aleatorio con una varianza $\sigma^2_{b0}=2^2=4$. La semilla se va a fijar en un valor de 1220872376 por cuestiones didácticas.
+
+```{r}
+datos <- gen_dat_b0(n=10, m=10, 
+                    beta0=4, beta1=-6, 
+                    sigmay=2, sigmab0=2, seed=1220872376)
+head(datos)
+```
+
+Vamos a ajustar dos modelos, el primero sin incluir b0 y el segundo incluyendo b0.
+
+```{r}
+fit1 <- gls(y ~ x, data=datos, method="REML") # Igual resultado con lm
+fit2 <- lme(y ~ x, random = ~ 1| group, data=datos, method="REML")
+```
+
+Resumen de modelos:
+
+```{r}
+summary(fit1)
+```
+```{r}
+summary(fit2)
+```
+
+
+Estadísticos y valor P
+```{r}
+lrt <- -2 * (logLik(fit1) - logLik(fit2))
+lrt
+```
+Observar grados de libertad a utilizar
+```{r}
+df <- 2 - 1
+p_value <- pchisq(q=3.04712, df=df, lower.tail=FALSE)
+p_value
+```
+
+Corrección ajuste de prueba de hipótesis:
+
+```{r}
+ggplot(data = data.frame(x = 0), mapping = aes(x = x)) + 
+  stat_function(fun = dchibarsq, args = list(df = 1)) + 
+  xlim(0, 5)
+```
+
+
+Chi cuadrado mezclada asociada al primer caso
+```{r}
+pchibarsq(p=3.04712, df = 1, mix = 0.5, lower.tail=FALSE)
+```
+### Prueba de hipótesis mediante simulación:
+
+Se pseudo generan 50 muestras aleatorias utilizando los betas estimados en el modelo previo:
+
+```{r}
+pseudo_gen_dat <- function(nobs, beta0, beta1, sigmay) {
+  group <- datos$group # Aqui la diferencia
+  x <- datos$x         # Aqui la diferencia
+  y <- rnorm(n=nobs, mean=beta0 + beta1 * x, sd=sigmay)
+  data.frame(group=group, x=x, y=y)
+}
+
+nrep <- 50
+lrts <- numeric(nrep)
+for (i in 1:nrep) {
+  pseudo_datos <- pseudo_gen_dat(nobs=100, beta0=4.64931, 
+                                 beta1=-6.00175, sigma=2.50842)
+  m1 <- gls(y ~ x, data=pseudo_datos, method="REML")
+  m2 <- lme(y ~ x, random = ~ 1| group, data=pseudo_datos, method="REML")
+  lrts[i] <- -2 * (logLik(m1) - logLik(m2))
+}
+```
+
+Se dibuja la densidad empírica:
+
+```{r}
+plot(density(lrts), main='Densidad empírica de los lrts')
+```
+
+Calculando el valor-P.
+
+```{r}
+acumulada <- ecdf(x=lrts) # F(x) para los valores LRT
+1 - acumulada(3.04712)    # Valor-P
+```
+Simulación automática mediante el paquete RLRsim:
+
+```{r}
+exactRLRT(m=fit2, nsim=1000)
+```
