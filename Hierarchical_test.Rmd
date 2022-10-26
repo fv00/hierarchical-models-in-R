@@ -1,0 +1,100 @@
+---
+title: "Hierarchical models test"
+author: "Santiago Franco"
+output: html_document
+---
+
+## Lectura datos
+```{r}
+columns <- c("cholesterol", "medical_doctor", "age", "BMI", "age_medical_doctor")
+```
+
+
+```{r}
+data <- read.table('associationmodel_1.txt', col.names = columns)
+#data$medical_doctor <- as.factor(data$medical_doctor)
+```
+
+### Dimensiones de los datos:
+```{r}
+dim(data)
+```
+
+
+```{r}
+library(dplyr)
+data %>% group_by(medical_doctor) %>% summarise(n=n()) %>% arrange(desc(n))
+```
+### Relacion lineal entre variables
+```{r}
+data %>% select(-medical_doctor) %>% cor
+```
+### Paciente con mayor nivel de colesterol teniendo menos de 61 años
+```{r}
+data %>% filter(age < 61) %>% filter(cholesterol==max(cholesterol))
+```
+### Modelo de regresión lineal clásico
+
+```{r}
+mod1 <- gls(cholesterol ~ age + BMI , data=data)
+summary(mod1)
+```
+
+### Modelo mixto con intercepto aleatorio:
+
+```{r}
+library(nlme)
+mod2 <- lme(fixed = cholesterol ~ age + BMI, random = ~ 1|medical_doctor,  data = data, method = "REML")
+summary(mod2)
+```
+
+```{r}
+summary(mod2)
+```
+
+```{r}
+anova(mod1, mod2)
+```
+```{r}
+pchisq(193.2792, df=1, lower.tail = FALSE)
+```
+
+```{r}
+mod3 <- lme(fixed = cholesterol ~ age + BMI , random = list(medical_doctor = ~ 1, age_medical_doctor=~ 1) ,  data = data, method = "REML")
+summary(mod3)
+```
+```{r}
+mod4 <- lme(fixed = cholesterol ~ age + BMI ,
+            random = list(medical_doctor = ~ age + BMI, age_medical_doctor=~ age + BMI) ,  data = data, method = "REML")
+summary(mod4)
+```
+
+```{r}
+con <- lmeControl(niterEM = 200)
+mod4 <- lme(fixed = cholesterol ~ age + BMI ,
+            random = list(medical_doctor = ~ age + BMI, age_medical_doctor=~ age + BMI) ,
+            data = data, 
+            method = "REML",
+            control = con)
+summary(mod4)
+```
+
+```{r}
+anova(mod3, mod4)
+```
+
+```{r}
+summary(mod3)
+random.effects(mod3)
+```
+
+```{r}
+doctor <- c(1,5,9)
+age <- c(55,60,75)
+bmi <-c(22,33,35)
+edad_doctor <- c(55,44,42)
+
+nueva_info <- data.frame(medical_doctor=doctor, age = age, BMI = bmi, age_medical_doctor = edad_doctor)
+predict(mod3, nueva_info)
+```
+
