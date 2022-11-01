@@ -1,0 +1,82 @@
+VarPower:
+
+### Ejemplo: $\sigma^2_y$ dependiendo de la potencia de una variable cuantitativa:
+
+En este ejemplo vamos a simular observaciones $n_i=10$ observaciones para $G=20$ grupos (en total 200 observaciones) que tengan la estructura mostrada abajo. En este ejemplo la varianza $\sigma^2_y$ no es constante, depende de la varianza general y de la variable $X$ elevada a una potencia $2\delta$, es decir $\sigma^2_{yij} = 16 |x_{ij}|^{2\delta}$. 
+
+\[\begin{align*}
+y_{ij} | b_0 &\sim  N(\mu_{ij}, \sigma^2_{ij}) \\
+\mu_{ij} &= 3 + 2 x_{ij} + b_{0i} \\
+\sigma^2_y &= \sigma^2 |x_{ij}|^{2\delta} \\
+b_{0} &\sim N(0, \sigma^2_{b0}=100) \\
+x_{ij} &\sim U(-100, 100)
+\end{align*}\]
+
+El vector de parámetros de este modelo es $\boldsymbol{\Theta}=(\beta_0=3, \beta_1=2, \sigma=4, \sigma_{b0}=10, delta=1.5)^\top$.
+
+El código para simular las 200 observaciones se muestra a continuación. Observe que se fijó la semilla para que el lector pueda replicar el ejemplo y obtener los mismos resultados.
+
+```{r}
+ni <- 10
+G <- 20
+nobs <- ni * G
+grupo <- factor(rep(x=1:G, each=ni))
+obs <- rep(x=1:ni, times=G)
+set.seed(123)
+x <- runif(n=nobs, min=-100, max=100)
+set.seed(123)
+b0 <- rnorm(n=G, mean=0, sd=sqrt(100)) # Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)              # El mismo intercepto aleatorio pero repetido
+delta <- 1.5
+media <- 3 + 2 * x + b0
+sigma2_y <- 16 * (abs(x)^(delta*2))
+set.seed(123)
+y <- rnorm(n=nobs, mean=media, sd=sqrt(sigma2_y))
+datos <- data.frame(obs, grupo, x, y)
+```
+
+Primero vamos a ajustar un modelo fit0 que asume varianza $\sigma^2_y$ constante para compararlo con el modelo fit1 que si modela la varianza en función de la covariable $X$.
+
+```{r}
+library(nlme)
+fit0 <- lme(y ~ x, random = ~ 1 | grupo, data=datos)
+```
+
+Vamos a explorar el gráfico de residuales versus la covariable  
+$X$ para ver si hay un indicio de heterocedasticidad (varianza no costante).
+
+```{r}
+plot(fit0, resid(., type = "p") ~ x, abline = 0, pch=20)
+```
+
+De la figura anterior vemos claramente una forma de “nudo”, abierto a izquierda y abierto a la derecha, esto es un indicio de que se debe modelar la varianza $\sigma^2_y$.
+
+El siguiente modelo permite que la varianza $\sigma^2_y$ sea función de $X$ usando una estructura ```varPower```.
+
+
+```{r}
+fit1 <- lme(y ~ x, random = ~ 1 | grupo, weights=varPower(form=~ x), data=datos) #Es necesario indicar el parámetro form a la hora de utilizar la estructura varPower
+```
+
+
+A continuación repetimos la misma figura de residuales anterior. De esta figura logramos ver que se eliminó el patrón de “nudo” observado antes.
+
+
+```{r}
+plot(fit1, resid(., type = "p") ~ x, abline = 0, pch=20)
+```
+La función ```summary``` se puede usar sobre el objeto ```fit1``` para obtener una tabla de resumen, a continuación se ilustra el uso y la salida de ```summary```.
+
+```{r}
+summary(fit1)
+```
+Según el resultado anterior:
+
+$\hat{\boldsymbol{\Theta}}=(\hat{\beta}_0=4.90, \hat{\beta}_1=-0.61, \hat{\sigma}=3.43, \hat{\delta}=1.52, \hat{\sigma}_{b0}=12.37)^\top$ Dónde rápidamente se concluye que el valor estimado $\hat{\delta}$ se acerca al valor real y que los los valores estimados $\hat{\beta}_0$ y $\hat{\beta}_1$ no se acercan a los valores reales.
+
+En el código de abajo usamos la función ```anova.lme``` para comparar los dos modelos anteriores. Del resultado vemos que ambos modelos tienen 4 parámetros y que el modelo fit1 tiene el menor valor de BIC y mayor valor de verosimilitud, esto indica que el modelo fit1 es más apropiado para modelar los datos.
+
+```{r}
+anova.lme(fit0, fit1)
+```
+
