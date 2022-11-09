@@ -1,0 +1,86 @@
+\[\begin{align*} 
+y_{ij} &\sim  Bernoulli(p_{ij}) \\ 
+\text{logit}(p_{ij}) &= -1.4 + b_{0i} + 0.33 \, x_{ij} \\
+x &\sim \text{Unif}(0, 1) \\
+b_0 &\sim N(0, 4)
+\end{align*}\]
+
+
+## 1. Simular 100 observaciones para cada uno de los 200 grupos del siguiente modelo Logístico. Consulte la información de función logit en este enlace.
+
+```{r}
+inverse_logit <- function(x){
+  return(exp(x)/(1+exp(x)))
+}
+```
+
+
+```{r}
+set.seed(123456)
+ni <- 100
+G <- 200
+nobs <- ni * G
+grupo <- factor(rep(x=1:G, each=ni))
+obs <- rep(x=1:ni, times=G)
+x <- runif(n=nobs, min=0, max=1)
+b0 <- rnorm(n=G, mean=0, sd=sqrt(4)) # Intercepto aleatorio
+b0 <- rep(x=b0, each=ni)             # El mismo intercepto aleatorio pero repetido
+p <- inverse_logit(-1.4 + 0.33 * x + b0) # Siempre utilizar función inversa a la planteada en el modelo
+y <- rbinom(n=nobs, size=1, prob=p)
+datos <- data.frame(obs, grupo, b0, x, p, y)
+```
+
+## 2. Vector de parámetros $\boldsymbol{\Theta}$ del modelo:
+
+$\boldsymbol{\Theta}=(\beta_0=-1.4,\beta_1=0.33,\sigma^2_{b_0}=4)$
+
+
+## 3. Estimación de parámetros ajustados
+
+```{r}
+library(lme4)
+mod_simulado <- glmer(formula= y ~ x + (1 | grupo),
+                      family = binomial(link="logit"),
+                      data = datos)
+```
+
+```{r}
+summary(mod_simulado)
+```
+
+$\boldsymbol{\Theta}=(\hat{\beta_0}=-1.5064,\hat{\beta_1}=0.3482,\hat{\sigma^2}_{b_0}=4.052)$
+
+## 4. Modelo ajustado
+
+\[\begin{align*} 
+y_{ij} &\sim  Bernoulli(\hat{p_{ij}}) \\ 
+\text{logit}(\hat{p_{ij}}) &= -1.5064 + b_{0i} + 0.3482 \, x_{ij} \\
+b_0 &\sim N(0, 4.052)
+\end{align*}\]
+
+
+## 5. Predicciones de los $b_0$ para cada grupo
+
+
+```{r}
+head(ranef(mod_simulado))
+```
+
+## 6. Modelo ajustado para el grupo $i=3$
+
+\[\begin{align*} 
+y_{ij} &\sim  Bernoulli(\hat{p_{3j}}) \\ 
+\text{logit}(\hat{p_{3j}}) &= -1.5064 -2.74291	 + 0.3482 \, x_{ij}
+\end{align*}\]
+
+## 7. Calcule manualmente estimación para $Pr(y_{ij}=1)$ cuando x=0.7 y del grupo $i=3$.
+
+```{r}
+inverse_logit(-1.5064 -2.74291	 + 0.3482*0.7)
+```
+
+## 8. Utilizar función predict para obtener estimación anterior.
+
+p
+
+## 9. Gráfico de $\widehat{Pr}(y_{ij} = 1)$ versus x para todos los grupos $i=1, 5, 10, 15$
