@@ -1,0 +1,46 @@
+---
+title: "Solución taller sobre capítulo 4 parte 3"
+author: "Santiago Franco"
+date: "10/11/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```r
+glmer(formula, data = NULL, family = gaussian, control = glmerControl(),
+      start = NULL, verbose = 0L, nAGQ = 1L, subset, weights, na.action,
+      offset, contrasts = NULL, mustart, etastart,
+      devFunOnly = FALSE, ...)
+```
+
+1. ¿Cuál es el argumento para definir la distribución de la variable respuesta?
+
+```Family```
+
+2. ¿Qué valor toma por defecto el argumento family?
+
+```Gaussian```, indicando una distribución normal.
+
+3. ¿Cómo se le indica a R que $y_{ij}\sim Bernoulli(p_{ij})$, con $logit(p_{ij})=\eta_{ij}$?
+
+```family=`binomial(link="logit")```
+
+4. ¿Cómo se le indica a R que $y_{ij}\sim Bernoulli(p_{ij})$, con $\phi(p_{ij})=\eta_{ij}$?
+
+```family=`binomial(link="probit")```
+ 
+5. ¿Cómo se le indica a R que $y_{ij} \sim  Poisson(\lambda_{ij})$, con $log(\lambda_{ij}) = \eta_{ij}$
+
+```poisson(link = "log")```
+
+6. ¿Cómo se le indica a R que $y_{ij} \sim  Normal (\mu_{ij})$, con $\sigma^2) 1/(\mu_{ij}) = \eta_{ij}$
+
+```gaussian(link = "inverse")```
+
+Para más información sobre links y familias de acuerdo al paquete glm consultar...
+
+```{r}
+help(family)
+```
+

@@ -1,0 +1,78 @@
+---
+title: "Solución taller sobre capítulo 4 parte 1"
+author: "Santiago Franco"
+date: "10/11/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(foreign)
+library(dplyr)
+```
+
+
+## 1.
+
+```{r}
+datos <- read.dta("polls.dta")
+
+# Usando solo la inf del survey = 9158
+datis <- subset(datos, survey == 9158)
+
+library(lme4)
+M1 <- glmer(bush ~ female + black + (1 | state), 
+                        data=datis, family=binomial(link="logit"))
+```
+
+## 2
+
+```{r}
+length(unique(datis$state))
+```
+
+## 3
+
+
+```{r}
+summary(M1)
+```
+
+begin{align} 
+y_{ij} &\sim  Bernoulli(\hat{p_{ij}}) \\ 
+\text{logit}(\hat{p_{ij}}) &= 0.44523 -0.09705_{female} -1.74161_{black}  + b_{0i} \\
+b_0 &\sim N(0, 4.052)
+\end{align}
+
+## 4
+
+Se tiene que el ser mujer disminuye en 0.09705 unidades el valor de la función logit asociada al modelo y que el ser una persona de color disminuye en 1.74161 unidades el valor de la función logit asociada al modelo.
+
+## 5 Modelo para state 39
+
+```{r}
+random_effects <- ranef(M1)$state
+random_effects[39,]
+```
+
+
+\begin{align} 
+y_{39j} & \sim  Bernoulli(\hat{p_{39j}}) \\ 
+\text{logit}(\hat{p_{39j}}) &= 0.44523 -0.09705_{female} -1.74161_{black}  + 0.357593
+\end{align}
+
+## 6
+
+```{r}
+datos_nuevos <- rbind(c(0,0),
+                      c(0,1),
+                      c(1,1),
+                      c(1,0))
+colnames(datos_nuevos) <- c("female", "black")
+datos_nuevos <- data.frame(datos_nuevos)
+datos_nuevos['state'] <- 39
+
+predict(M1, newdata=datos_nuevos, type='response')
+```
+
