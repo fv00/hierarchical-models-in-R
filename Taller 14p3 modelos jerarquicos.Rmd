@@ -3,8 +3,8 @@ title: "Solución taller sobre capítulo 4 parte 3"
 author: "Santiago Franco"
 date: "10/11/2022"
 output:
-  pdf_document: default
-  html_document: default
+  pdf_document:
+    keep_tex: true
 ---
 
 ```r
@@ -22,19 +22,19 @@ glmer(formula, data = NULL, family = gaussian, control = glmerControl(),
 
 ```Gaussian```, indicando una distribución normal.
 
-3. ¿Cómo se le indica a R que $y_{ij}\sim Bernoulli(p_{ij})$, con $logit(p_{ij})=\eta_{ij}$?
+3. ¿Como se le indica a R que  $y_{ij} \sim Bernoulli(p_{ij})$, con  $y_{ij} \sim Bernoulli(p_{ij})$
 
 ```family=`binomial(link="logit")```
 
-4. ¿Cómo se le indica a R que $y_{ij}\sim Bernoulli(p_{ij})$, con $\phi(p_{ij})=\eta_{ij}$?
+4. ¿Como se le indica a R que $y_{ij} \sim Bernoulli(p_{ij})$, con $\phi(p_{ij})=\eta_{ij}$ ?
 
 ```family=`binomial(link="probit")```
  
-5. ¿Cómo se le indica a R que $y_{ij} \sim  Poisson(\lambda_{ij})$, con $log(\lambda_{ij}) = \eta_{ij}$
+5. ¿Como se le indica a R que $y_{ij} \sim  Poisson(\lambda_{ij})$, con $log(\lambda_{ij}) = \eta_{ij}$
 
 ```poisson(link = "log")```
 
-6. ¿Cómo se le indica a R que $y_{ij} \sim  Normal (\mu_{ij})$, con $\sigma^2) 1/(\mu_{ij}) = \eta_{ij}$
+6. ¿Como se le indica a R que $y_{ij} \sim  Normal (\mu_{ij})$, con $\sigma^2) 1/(\mu_{ij}) = \eta_{ij}$
 
 ```gaussian(link = "inverse")```
 
