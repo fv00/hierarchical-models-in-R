@@ -1,0 +1,234 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+
+https://www.datos.gov.co/Inclusi-n-Social-y-Reconciliaci-n/Beneficiarios-M-s-Familias-en-Acci-n/xfif-myr2
+
+Modelo condicional:
+
+Modelo con condiciones sobre una varaibles
+
+Ejemplo:
+
+log(uij) = beta0 + b0_i + beta1Niveleducativo
+
+```{r}
+library(HSAUR2)
+library(lme4)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+data("epilepsy", package = "HSAUR2")
+epilepsy$x <- as.numeric(epilepsy$period)
+epilepsy$y <- epilepsy$seizure.rate
+```
+
+A data frame with 236 observations on the following 6 variables.
+
+treatment
+the treatment group, a factor with levels placebo and Progabide.
+
+base
+the number of seizures before the trial.
+
+age
+the age of the patient.
+
+seizure.rate
+the number of seizures (response variable).
+
+period
+treatment period, an ordered factor with levels 1 to 4.
+
+subject
+the patient ID, a factor with levels 1 to 59.
+
+Details
+In this clinical trial, 59 patients suffering from epilepsy were randomized to groups receiving either the anti-epileptic drug Progabide or a placebo in addition to standard chemotherapy. The numbers of seizures suffered in each of four, two-week periods were recorded for each patient along with a baseline seizure count for the 8 weeks prior to being randomized to treatment and age. The main question of interest is whether taking progabide reduced the number of epileptic seizures compared with placebo.
+
+
+## 2. ¿Cuántos pacientes tiene la base de datos?
+
+```{r}
+valores_ordenados <- epilepsy %>% count(subject) 
+valores_ordenados[order(valores_ordenados$n), ]
+```
+
+Se tienen 59 pacientes
+
+## 3.¿Cuál fue el mayor número de seguimientos a un paciente?
+
+Todos tienen 4 segumientos
+
+## 4.¿Cuántos pacientes recibieron Progabide? ¿Cuántos pacientes recibieron el placebo?
+
+```{r}
+epilepsy[,c('subject','treatment')] |> unique() |> count(treatment)
+```
+
+Se tienen 28 pacientes con placebo y 31 con progabide
+
+## 5.Haga un dibujo igualito al mostrado abajo para monitorear la evolución de la variable Y en función del periodo X para los pacientes 8, 14, 35, 49. Use colores para diferenciar los pacientes que recibieron Progabide y el placebo.
+
+```{r}
+pacientes <- c(8,14,35,49)
+datos_grafica <- epilepsy |> filter(subject %in% pacientes)
+ggplot(data=datos_grafica, aes(x=x, y=y, color=treatment)) + geom_point() + facet_wrap(~subject)
+```
+
+
+## 6. Ajuste el siguiente modelo en el objeto mod1.
+
+\begin{align} 
+y_{ij} | b_0 &\sim  Poisson(\lambda_{ij}) \\ 
+\log(\lambda_{ij}) &= \beta_0 + \beta_1 \, x_{ij} + \beta_2 \, treatment_{Progabidei} + b_{0i} \\
+b_0 &\sim N(0, \sigma^2_{b0}),
+\end{align}
+
+donde i corresponde al paciente y j a la visita. Note que el tratamiento de referencia es placebo. Use nAGQ=1 para la aproximación por cuadratura de la intergral interna.
+
+```{r}
+mod1  <- glmer(y~x + treatment + (1|subject), data=epilepsy, nAGQ = 1, family=poisson(link='log'))
+summary(mod1)
+```
+
+
+## 7. Ajuste el siguiente modelo en el objeto mod2.
+
+\begin{align} 
+y_{ij} | b_0 &\sim  Poisson(\lambda_{ij}) \\ 
+\log(\lambda_{ij}) &= \beta_0 + \beta_1 \, x_{ij} + \beta_2 \, treatment_{Progabidei} + \beta_3 \, x_{ij} \, treatment_{Progabidei} + b_{0i} \\
+b_0 &\sim N(0, \sigma^2_{b0}),
+\end{align}
+
+
+```{r}
+mod2  <- glmer(y~x + treatment + x*treatment + (1|subject), data=epilepsy, nAGQ = 1, family=poisson(link='log'))
+summary(mod2)
+```
+## 8. Ajuste el siguiente modelo en el objeto mod3.
+
+\begin{align} 
+y_{ij} | {b_0, b_1} &\sim  Poisson(\lambda_{ij}) \\ 
+\log(\lambda_{ij}) &= \beta_0 + \beta_1 \, x_{ij} + \beta_2 \, treatment_{Progabidei} + \beta_3 \, x_{ij} \, treatment_{Progabidei} + b_{0i} + b_{1i} \,x_{ij} \\
+\left (
+\begin{matrix}
+b_{0} \\ b_{1}
+\end{matrix} 
+\right ) &\sim 
+N\left ( \left ( \begin{matrix}
+0 \\ 0
+\end{matrix} \right ),
+\left ( \begin{matrix}
+\sigma^2_{b0} & \sigma_{b01} \\ 
+\sigma_{b01} & \sigma^2_{b1}
+\end{matrix} \right )
+\right ) \\
+\end{align}
+
+
+```{r}
+mod3  <- glmer(y~x + treatment + x*treatment + (x|subject), data=epilepsy, nAGQ = 1, family=poisson(link='log'))
+summary(mod3)
+```
+
+
+## 9. Use una prueba de razón de verosimilitud sencilla para determinar cuál de los modelos es mejor. Use el siguiente código.
+
+```{r}
+anova(mod1, mod2, mod3)
+```
+
+¿Cuál de los dos modelos es mejor?
+
+## 9. Explore la ayuda de la función predict.merMod (o predict). ¿Para qué sirve el argumento type?
+
+```{r}
+predicciones_mod1 <- predict(mod1, type='response')
+predicciones_mod2 <- predict(mod2, type='response')
+predicciones_mod3 <- predict(mod3, type='response')
+```
+
+
+## 10.Para cada uno de los modelos ajustados calcule el coeficiente de correlación de Pearson entre 
+
+¿Cuál modelo tiene el mayor $\rho$?
+
+```{r}
+epilepsy$predicciones1 <- predicciones_mod1
+epilepsy$predicciones2 <- predicciones_mod2
+epilepsy$predicciones3 <- predicciones_mod3
+```
+
+```{r}
+cor(epilepsy[,c('y', 'predicciones1', 'predicciones2', 'predicciones3')])
+```
+
+El modelo cuyas respuestas predichas se relacionan más con la variable respuesta es el modelo3.
+
+## 11. Escriba el modelo ajustado que resultó ser el mejor modelo.
+
+```{r}
+summary(mod3)
+```
+
+\begin{align} 
+y_{ij} | {b_0, b_1} &\sim  Poisson(\lambda_{ij}) \\ 
+\log(\lambda_{ij}) &= 1.86491 -0.04349 \, x_{ij} -0.25098 \, treatment_{Progabidei} + -0.01383 \, x_{ij} \, treatment_{Progabidei} + b_{0i} + b_{1i} \,x_{ij} \\
+\left (
+\begin{matrix}
+b_{0} \\ b_{1}
+\end{matrix} 
+\right ) &\sim 
+N\left ( \left ( \begin{matrix}
+0 \\ 0
+\end{matrix} \right ),
+\left ( \begin{matrix}
+1.02745  & -0.05720049 \\ 
+-0.05720049 & 0.02095
+\end{matrix} \right )
+\right ) \\
+\end{align}
+
+
+
+
+## 12. Usando el modelo anterior, escriba el modelo ajustado para el paciente #8.
+
+```{r}
+ranef(mod3)
+```
+
+
+\begin{align} 
+y_{ij} &\sim  Poisson(\lambda_{ij}) \\ 
+\log(\lambda_{8j}) &= 1.86491 -0.04349 \, x_{8j} -0.25098 \, treatment_{Progabidei} + -0.01383 \, x_{8j} \, treatment_{Progabidei} + 1.904188026 -0.220740992 \,x_{8j} 
+\end{align}
+
+## 13. Vuelva a construir la figura anterior con los pacientes 8, 14, 35, 49 pero incluyendo la curva ajustada de $\hat{\lambda}$ con cada modelo. Abajo se muestra una de las tres figuras.
+
+```{r}
+pacientes <- c(8,14,35,49)
+datos_grafica <- epilepsy |> filter(subject %in% pacientes)
+ggplot(data=datos_grafica, aes(x=x, y=predicciones1, color=treatment)) + geom_line() +geom_point() + facet_wrap(~subject) 
+```
+
+```{r}
+pacientes <- c(8,14,35,49)
+datos_grafica <- epilepsy |> filter(subject %in% pacientes)
+ggplot(data=datos_grafica, aes(x=x, y=predicciones2, color=treatment)) + geom_line() +geom_point() + facet_wrap(~subject) 
+```
+
+```{r}
+pacientes <- c(8,14,35,49)
+datos_grafica <- epilepsy |> filter(subject %in% pacientes)
+ggplot(data=datos_grafica, aes(x=x, y=predicciones3, color=treatment)) + geom_line() +geom_point() + facet_wrap(~subject) 
+```
+## 14. ¿A cuál modelo pertence la figura? ¿mod1, mod2 o mod3?
+mod3
+
+

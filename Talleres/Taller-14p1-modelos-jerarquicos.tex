@@ -1,0 +1,571 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Solución taller sobre capítulo 4 parte 1},
+  pdfauthor={Santiago Franco},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Solución taller sobre capítulo 4 parte 1}
+\author{Santiago Franco}
+\date{10/11/2022}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in register(): Can't find generic `scale_type` in package ggplot2 to
+## register S3 method.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lme4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{aligned} 
+y_{ij} &\sim  Bernoulli(p_{ij}) \\ 
+\text{logit}(p_{ij}) &= -1.4 + b_{0i} + 0.33 \, x_{ij} \\
+x &\sim \text{Unif}(0, 1) \\
+b_0 &\sim N(0, 4)
+\end{aligned}
+
+\hypertarget{simular-100-observaciones-para-cada-uno-de-los-200-grupos-del-siguiente-modelo-loguxedstico.-consulte-la-informaciuxf3n-de-funciuxf3n-logit-en-este-enlace.}{%
+\subsection{1. Simular 100 observaciones para cada uno de los 200 grupos
+del siguiente modelo Logístico. Consulte la información de función logit
+en este
+enlace.}\label{simular-100-observaciones-para-cada-uno-de-los-200-grupos-del-siguiente-modelo-loguxedstico.-consulte-la-informaciuxf3n-de-funciuxf3n-logit-en-este-enlace.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{inverse\_logit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{exp}\NormalTok{(x)}\SpecialCharTok{/}\NormalTok{(}\DecValTok{1}\SpecialCharTok{+}\FunctionTok{exp}\NormalTok{(x)))}
+\NormalTok{\}}
+\NormalTok{logit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
+  \FunctionTok{return}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\FunctionTok{logit}\NormalTok{(x))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123456}\NormalTok{)}
+\NormalTok{ni }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{G }\OtherTok{\textless{}{-}} \DecValTok{200}
+\NormalTok{nobs }\OtherTok{\textless{}{-}}\NormalTok{ ni }\SpecialCharTok{*}\NormalTok{ G}
+\NormalTok{grupo }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\AttributeTok{x=}\DecValTok{1}\SpecialCharTok{:}\NormalTok{G, }\AttributeTok{each=}\NormalTok{ni))}
+\NormalTok{obs }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\AttributeTok{x=}\DecValTok{1}\SpecialCharTok{:}\NormalTok{ni, }\AttributeTok{times=}\NormalTok{G)}
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(}\AttributeTok{n=}\NormalTok{nobs, }\AttributeTok{min=}\DecValTok{0}\NormalTok{, }\AttributeTok{max=}\DecValTok{1}\NormalTok{)}
+\NormalTok{b0 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n=}\NormalTok{G, }\AttributeTok{mean=}\DecValTok{0}\NormalTok{, }\AttributeTok{sd=}\FunctionTok{sqrt}\NormalTok{(}\DecValTok{4}\NormalTok{)) }\CommentTok{\# Intercepto aleatorio}
+\NormalTok{b0 }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\AttributeTok{x=}\NormalTok{b0, }\AttributeTok{each=}\NormalTok{ni)             }\CommentTok{\# El mismo intercepto aleatorio pero repetido}
+\NormalTok{p }\OtherTok{\textless{}{-}} \FunctionTok{inverse\_logit}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{1.4} \SpecialCharTok{+} \FloatTok{0.33} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ b0) }\CommentTok{\# Siempre utilizar función inversa a la planteada en el modelo}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{rbinom}\NormalTok{(}\AttributeTok{n=}\NormalTok{nobs, }\AttributeTok{size=}\DecValTok{1}\NormalTok{, }\AttributeTok{prob=}\NormalTok{p)}
+\NormalTok{datos }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(obs, grupo, b0, x, p, y)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{vector-de-paruxe1metros-boldsymboltheta-del-modelo}{%
+\subsection{\texorpdfstring{2. Vector de parámetros
+\(\boldsymbol{\Theta}\) del
+modelo:}{2. Vector de parámetros \textbackslash boldsymbol\{\textbackslash Theta\} del modelo:}}\label{vector-de-paruxe1metros-boldsymboltheta-del-modelo}}
+
+\(\boldsymbol{\Theta}=(\beta_0=-1.4,\beta_1=0.33,\sigma^2_{b_0}=4)\)
+
+\hypertarget{estimaciuxf3n-de-paruxe1metros-ajustados}{%
+\subsection{3. Estimación de parámetros
+ajustados}\label{estimaciuxf3n-de-paruxe1metros-ajustados}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod\_simulado }\OtherTok{\textless{}{-}} \FunctionTok{glmer}\NormalTok{(}\AttributeTok{formula=}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ grupo),}
+                      \AttributeTok{family =} \FunctionTok{binomial}\NormalTok{(}\AttributeTok{link=}\StringTok{"logit"}\NormalTok{),}
+                      \AttributeTok{data =}\NormalTok{ datos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(mod\_simulado)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: y ~ x + (1 | grupo)
+##    Data: datos
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##  17165.6  17189.3  -8579.8  17159.6    19997 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -6.3039 -0.4878 -0.2047  0.4473  8.2991 
+## 
+## Random effects:
+##  Groups Name        Variance Std.Dev.
+##  grupo  (Intercept) 4.052    2.013   
+## Number of obs: 20000, groups:  grupo, 200
+## 
+## Fixed effects:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  -1.5064     0.1495 -10.076  < 2e-16 ***
+## x             0.3482     0.0670   5.196 2.03e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation of Fixed Effects:
+##   (Intr)
+## x -0.230
+\end{verbatim}
+
+\(\boldsymbol{\Theta}=(\hat{\beta_0}=-1.5064,\hat{\beta_1}=0.3482,\hat{\sigma^2}_{b_0}=4.052)\)
+
+\hypertarget{modelo-ajustado}{%
+\subsection{4. Modelo ajustado}\label{modelo-ajustado}}
+
+\begin{aligned} 
+y_{ij} &\sim  Bernoulli(\hat{p_{ij}}) \\ 
+\text{logit}(\hat{p_{ij}}) &= -1.5064 + b_{0i} + 0.3482 \, x_{ij} \\
+b_0 &\sim N(0, 4.052)
+\end{aligned}
+
+\hypertarget{predicciones-de-los-b_0-para-cada-grupo}{%
+\subsection{\texorpdfstring{5. Predicciones de los \(b_0\) para cada
+grupo}{5. Predicciones de los b\_0 para cada grupo}}\label{predicciones-de-los-b_0-para-cada-grupo}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{ranef}\NormalTok{(mod\_simulado))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $grupo
+##      (Intercept)
+## 1    1.642703080
+## 2    3.663851430
+## 3   -2.742909479
+## 4   -0.175545943
+## 5    0.742377161
+## 6    4.473373953
+## 7   -1.077494291
+## 8   -1.210497689
+## 9   -0.468146288
+## 10  -2.303134987
+## 11   0.601700231
+## 12   2.202617440
+## 13  -1.384071311
+## 14   1.520414253
+## 15  -0.475355097
+## 16  -0.733247575
+## 17   2.262898462
+## 18  -0.061537460
+## 19   3.666694883
+## 20  -0.403762302
+## 21   1.673810647
+## 22  -0.239574825
+## 23   0.746365394
+## 24  -2.320815520
+## 25  -1.724997594
+## 26  -1.354355201
+## 27   1.513986247
+## 28   1.482349058
+## 29  -3.432694418
+## 30  -1.984793689
+## 31   0.662614086
+## 32  -2.320427094
+## 33   0.749274831
+## 34   1.570386636
+## 35   2.623854001
+## 36   3.556491872
+## 37  -0.052715682
+## 38  -0.649552281
+## 39  -1.542264645
+## 40  -1.538434566
+## 41  -2.316706053
+## 42  -2.317571096
+## 43   2.875694186
+## 44  -1.724328829
+## 45   0.746614947
+## 46   2.953910014
+## 47  -0.120658951
+## 48   1.719361906
+## 49   1.535114023
+## 50  -1.070190599
+## 51   2.188995088
+## 52  -0.054979723
+## 53  -0.045363569
+## 54   0.177858662
+## 55  -0.194577601
+## 56   0.615904353
+## 57  -0.072614353
+## 58   5.100949915
+## 59  -3.439179527
+## 60  -0.653982017
+## 61  -0.843269778
+## 62  -2.737393107
+## 63   2.150041991
+## 64   0.670250116
+## 65   2.448502987
+## 66   1.669590942
+## 67  -0.044045215
+## 68   4.478739020
+## 69  -3.437016927
+## 70   0.280479952
+## 71  -3.434406250
+## 72   1.515596153
+## 73   0.121630038
+## 74  -0.186788683
+## 75  -1.211716637
+## 76   0.234994388
+## 77  -0.335457324
+## 78   3.782825471
+## 79  -0.636700182
+## 80  -0.538316317
+## 81  -2.741817814
+## 82   2.559402778
+## 83  -2.317456986
+## 84  -3.426014026
+## 85   3.103784910
+## 86  -2.293710384
+## 87  -2.009974334
+## 88  -2.008064958
+## 89   0.677548540
+## 90  -1.553994713
+## 91   1.519838573
+## 92   2.100671113
+## 93   0.741191999
+## 94  -0.632318862
+## 95  -2.291799014
+## 96  -1.548848023
+## 97   0.290385653
+## 98  -1.737435138
+## 99  -0.318578965
+## 100  2.518699803
+## 101 -2.742970919
+## 102 -1.548909872
+## 103  0.221977809
+## 104 -0.571388638
+## 105 -2.314393338
+## 106 -1.996903932
+## 107  0.009506078
+## 108  1.972112779
+## 109  1.071016457
+## 110  2.290320573
+## 111  0.286100074
+## 112  1.184852874
+## 113  1.082501781
+## 114  1.643367046
+## 115 -0.322397368
+## 116 -1.357491344
+## 117 -2.313461431
+## 118 -2.324302258
+## 119  0.116007798
+## 120  1.284664877
+## 121  1.152236320
+## 122  0.480077997
+## 123  1.351252977
+## 124  1.374925765
+## 125  0.423995380
+## 126 -2.309125178
+## 127 -0.469792117
+## 128  1.198813909
+## 129  2.750201285
+## 130  0.910229833
+## 131  2.863278350
+## 132 -2.730397491
+## 133 -0.565990753
+## 134 -0.553345064
+## 135  0.942215949
+## 136  0.140058074
+## 137 -0.176055754
+## 138 -1.360595546
+## 139  0.012782387
+## 140  0.630787407
+## 141 -0.068991272
+## 142 -2.311355149
+## 143 -3.436111045
+## 144  2.006913915
+## 145 -2.736501996
+## 146 -1.075633663
+## 147 -3.426263426
+## 148  0.887290628
+## 149 -3.442686257
+## 150  0.968219657
+## 151 -3.432931413
+## 152  0.054394708
+## 153  0.122357262
+## 154 -0.307702802
+## 155  3.070822338
+## 156 -0.846445127
+## 157 -2.312022923
+## 158  2.157430351
+## 159 -1.548787294
+## 160  0.158407040
+## 161 -3.446360656
+## 162 -0.244671074
+## 163 -0.854955082
+## 164  0.052511026
+## 165 -0.471917382
+## 166  2.060537574
+## 167 -1.725831020
+## 168  0.487706526
+## 169  2.605748019
+## 170  4.256830798
+## 171  1.859657774
+## 172 -1.083737729
+## 173  0.178481565
+## 174  1.811238844
+## 175 -0.315835469
+## 176  1.242790000
+## 177  1.922397179
+## 178 -1.541475650
+## 179  0.379974875
+## 180 -1.995553630
+## 181 -0.397813512
+## 182 -1.979156749
+## 183  1.466492171
+## 184  2.735033952
+## 185 -2.308688250
+## 186  3.010233344
+## 187  1.213725427
+## 188  2.874168127
+## 189 -0.840928922
+## 190  3.789567509
+## 191 -0.263765476
+## 192  2.464439941
+## 193  0.914680354
+## 194 -1.551492417
+## 195  2.225425223
+## 196 -2.302473429
+## 197  1.203185280
+## 198 -0.124562556
+## 199 -1.543263199
+## 200  0.372174800
+\end{verbatim}
+
+\hypertarget{modelo-ajustado-para-el-grupo-i3}{%
+\subsection{\texorpdfstring{6. Modelo ajustado para el grupo
+\(i=3\)}{6. Modelo ajustado para el grupo i=3}}\label{modelo-ajustado-para-el-grupo-i3}}
+
+\begin{aligned} 
+y_{ij} &\sim  Bernoulli(\hat{p_{3j}}) \\ 
+\text{logit}(\hat{p_{3j}}) &= -1.5064 -2.74291   + 0.3482 \, x_{ij}
+\end{aligned}
+
+\hypertarget{calcule-manualmente-estimaciuxf3n-para-pry_ij1-cuando-x0.7-y-del-grupo-i3.}{%
+\subsection{\texorpdfstring{7. Calcule manualmente estimación para
+\(Pr(y_{ij}=1)\) cuando x=0.7 y del grupo
+\(i=3\).}{7. Calcule manualmente estimación para Pr(y\_\{ij\}=1) cuando x=0.7 y del grupo i=3.}}\label{calcule-manualmente-estimaciuxf3n-para-pry_ij1-cuando-x0.7-y-del-grupo-i3.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{inverse\_logit}\NormalTok{(}\SpecialCharTok{{-}}\FloatTok{1.5064} \SpecialCharTok{{-}}\FloatTok{2.74291}   \SpecialCharTok{+} \FloatTok{0.3482}\SpecialCharTok{*}\FloatTok{0.7}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.01788809
+\end{verbatim}
+
+\hypertarget{utilizar-funciuxf3n-predict-para-obtener-estimaciuxf3n-anterior.}{%
+\subsection{8. Utilizar función predict para obtener estimación
+anterior.}\label{utilizar-funciuxf3n-predict-para-obtener-estimaciuxf3n-anterior.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_data }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x=}\FloatTok{0.7}\NormalTok{, }\AttributeTok{grupo=}\DecValTok{3}\NormalTok{)}
+\FunctionTok{predict}\NormalTok{(mod\_simulado, }\AttributeTok{newdata=}\NormalTok{new\_data, }\AttributeTok{type=}\StringTok{"response"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          1 
+## 0.01788739
+\end{verbatim}
+
+\hypertarget{gruxe1fico-de-widehatpry_ij-1-versus-x-para-todos-los-grupos-i1-5-10-15}{%
+\subsection{\texorpdfstring{9. Gráfico de \(\widehat{Pr}(y_{ij} = 1)\)
+versus x para todos los grupos
+\(i=1, 5, 10, 15\)}{9. Gráfico de \textbackslash widehat\{Pr\}(y\_\{ij\} = 1) versus x para todos los grupos i=1, 5, 10, 15}}\label{gruxe1fico-de-widehatpry_ij-1-versus-x-para-todos-los-grupos-i1-5-10-15}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod\_simulado}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: y ~ x + (1 | grupo)
+##    Data: datos
+##       AIC       BIC    logLik  deviance  df.resid 
+## 17165.637 17189.347 -8579.818 17159.637     19997 
+## Random effects:
+##  Groups Name        Std.Dev.
+##  grupo  (Intercept) 2.013   
+## Number of obs: 20000, groups:  grupo, 200
+## Fixed Effects:
+## (Intercept)            x  
+##     -1.5064       0.3482
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{valores\_ajustados }\OtherTok{\textless{}{-}} \FunctionTok{fitted}\NormalTok{(mod\_simulado)}
+\NormalTok{datos[}\StringTok{\textquotesingle{}valores\_ajustados\textquotesingle{}}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ valores\_ajustados}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{grupos }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{)}
+\NormalTok{datos\_grupos }\OtherTok{\textless{}{-}}\NormalTok{ datos }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grupo }\SpecialCharTok{\%in\%}\NormalTok{ grupos)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ datos\_grupos, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{x, }\AttributeTok{y=}\NormalTok{valores\_ajustados, }\AttributeTok{color=}\NormalTok{grupo)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Taller-14p1-modelos-jerarquicos_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\end{document}
