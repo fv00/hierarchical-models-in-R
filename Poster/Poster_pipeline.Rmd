@@ -1,0 +1,51 @@
+
+```{r}
+library(dplyr)
+```
+
+
+
+```{r}
+datos <- read.csv('Citas_por_Especialidad.csv')
+```
+
+
+```{r}
+conteo_entidades <- datos |> group_by(CODIGO.ENTIDAD) |> summarise(conteo = n())
+
+conteo_citas <- datos |> group_by(ESPECIALIDAD) |> summarise(conteo=n())
+```
+
+
+```{r}
+conteo_entidades
+```
+
+
+```{r}
+conteo_citas
+```
+
+```{r}
+library(lubridate)
+datos$FECHA.CITA = substr(datos$FECHA.CITA, 1, 10)
+```
+
+```{r}
+datos$FECHA.CITA = as.Date(datos$FECHA.CITA, format = "%m/%d/%Y")
+datos['PERIODO'] = format(datos$FECHA.CITA, "%Y/%m")
+```
+
+```{r}
+conteo_citas <- datos |> group_by(ESPECIALIDAD, PERIODO, REGIMEN, CODIGO.ENTIDAD, GENERO, CIUDAD.RESIDENCIA) |> summarise(conteo=n())
+```
+```{r}
+write.csv(conteo_citas, file="conteo_citas.csv")
+```
+
+```{r}
+conteo_citas
+```
+
+
+

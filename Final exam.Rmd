@@ -1,0 +1,119 @@
+
+
+```{r}
+install.packages('hglm')
+```
+
+```{r}
+library(hglm)
+library(lme4)
+```
+
+
+```{r}
+data("semiconductor")
+help("semiconductor")
+```
+
+```{r}
+mod1 <- glmer(y~x1+x5+x6 + (1|Device), data=semiconductor, family = inverse.gaussian(link='log'))
+```
+
+```{r}
+summary(mod1)
+```
+
+
+
+```{r}
+install.packages('glmmTMB')
+library(glmmTMB)
+```
+```{r}
+mod2 <- glmmTMB(y~x1+x3+x5 + (1|Device), data=semiconductor, family = Gamma(link='log'))
+```
+
+```{r}
+summary(mod2)
+```
+
+
+```{r}
+summary(mod2)
+```
+```{r}
+install.packages('glmm')
+library(glmm)
+```
+
+```{r}
+glmm::bacteria
+```
+
+
+```{r}
+mod3 <- glmer(y~trt + week + (1|ID),data=bacteria,nAGQ = 11, family=binomial(link = "logit"))
+```
+
+```{r}
+new_data = bacteria[8,]
+new_data['week']=12
+new_data
+predict(mod3, newdata=new_data, type='response')
+```
+
+```{r}
+mod4 <- glmmTMB(count ~ DOY + spp + (1|site), data= Salamanders, family=poisson(link = "log"))
+```
+
+```{r}
+predicciones <- predict(mod4, type = 'response')
+```
+
+```{r}
+cor(predicciones, Salamanders$count, method='pearson')
+```
+```{r}
+logit <- function(x){
+  return(log((x)/(1-x)))
+}
+inverse_logit <- function(x){
+  return(exp(x)/(1+exp(x)))
+}
+
+inverse_logit(-0.30840 + 0.15)
+```
+
+```{r}
+library(foreign)
+datos <- read.dta("https://stats.idre.ucla.edu/stat/data/hsbdemo.dta")
+```
+
+```{r}
+datos
+```
+
+
+```{r}
+modelo_5 <- glmer(awards ~ female +math+ (1+math|cid),family=poisson(link="log"), data=datos, nAGQ=1)
+```
+
+```{r}
+summary(modelo_5)
+```
+
+```{r}
+new_data <- datos[datos['cid']==15,]
+new_data <- new_data[1, ]
+new_data['math'] <- mean(datos$math)
+new_data
+
+predict(modelo_5, newdata=new_data, type='response')
+```
+
+
+
+
+
+
+

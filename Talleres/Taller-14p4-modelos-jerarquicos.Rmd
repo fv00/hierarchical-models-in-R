@@ -136,8 +136,12 @@ Para obtener la respuesta a los datos utilizados o datos nuevos en forma de la v
 ```{r}
 summary(mod3)
 ```
+
 ```{r}
 VarCorr(mod3)
+```
+
+```{r}
 -0.873*23.4307*3.8363
 ```
 
